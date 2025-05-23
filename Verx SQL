@@ -1,144 +1,271 @@
--- =========================================
--- Script de criação das tabelas Olist no SQL Server
--- Autor: Fause Souza
--- Data: 2025-05-23
--- =========================================
-
--- Criar banco de dados se não existir
-IF DB_ID('olist_db') IS NULL
-BEGIN
-    CREATE DATABASE olist_db;
-END;
+-- CRIAÇÃO DO BANCO
+CREATE DATABASE olist_db;
 GO
-
 USE olist_db;
 GO
 
--- ---------------------------
--- Tabela: olist_customers_dataset
--- Dados dos clientes
--- ---------------------------
-IF OBJECT_ID('olist_customers_dataset', 'U') IS NOT NULL DROP TABLE olist_customers_dataset;
-GO
+-- ==================== TABELAS ====================
+
+-- olist_customers_dataset
 CREATE TABLE olist_customers_dataset (
-    customer_id VARCHAR(50) NOT NULL PRIMARY KEY,
-    customer_unique_id VARCHAR(50) NOT NULL,
-    customer_zip_code_prefix VARCHAR(10) NULL,
-    customer_city VARCHAR(100) NULL,
-    customer_state VARCHAR(10) NULL
+    customer_id VARCHAR(50),
+    customer_unique_id VARCHAR(50),
+    customer_zip_code_prefix VARCHAR(10),
+    customer_city VARCHAR(100),
+    customer_state VARCHAR(10)
+);
+GO
+BULK INSERT olist_customers_dataset
+FROM 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\olist_customers_dataset.csv'
+WITH (
+    FORMAT = 'CSV',
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '0x0a',
+    TABLOCK
 );
 GO
 
--- ---------------------------
--- Tabela: olist_orders_dataset
--- Dados dos pedidos
--- ---------------------------
-IF OBJECT_ID('olist_orders_dataset', 'U') IS NOT NULL DROP TABLE olist_orders_dataset;
-GO
+-- olist_orders_dataset
 CREATE TABLE olist_orders_dataset (
-    order_id VARCHAR(50) NOT NULL PRIMARY KEY,
-    customer_id VARCHAR(50) NOT NULL,
-    order_status VARCHAR(20) NOT NULL,
-    order_purchase_timestamp DATETIME NULL,
-    order_approved_at DATETIME NULL,
-    order_delivered_carrier_date DATETIME NULL,
-    order_delivered_customer_date DATETIME NULL,
-    order_estimated_delivery_date DATETIME NULL
+    order_id VARCHAR(50),
+    customer_id VARCHAR(50),
+    order_status VARCHAR(20),
+    order_purchase_timestamp DATETIME,
+    order_approved_at DATETIME,
+    order_delivered_carrier_date DATETIME,
+    order_delivered_customer_date DATETIME,
+    order_estimated_delivery_date DATETIME
+);
+GO
+BULK INSERT olist_orders_dataset
+FROM 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\olist_orders_dataset.csv'
+WITH (
+    FORMAT = 'CSV',
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '0x0a',
+    TABLOCK
 );
 GO
 
--- ---------------------------
--- Tabela: olist_order_items_dataset
--- Itens de cada pedido
--- ---------------------------
-IF OBJECT_ID('olist_order_items_dataset', 'U') IS NOT NULL DROP TABLE olist_order_items_dataset;
-GO
+-- olist_order_items_dataset
 CREATE TABLE olist_order_items_dataset (
-    order_id VARCHAR(50) NOT NULL,
-    order_item_id INT NOT NULL,
-    product_id VARCHAR(50) NOT NULL,
-    seller_id VARCHAR(50) NOT NULL,
-    shipping_limit_date DATETIME NULL,
-    price FLOAT NULL,
-    freight_value FLOAT NULL,
-    CONSTRAINT PK_olist_order_items PRIMARY KEY (order_id, order_item_id)
+    order_id VARCHAR(50),
+    order_item_id INT,
+    product_id VARCHAR(50),
+    seller_id VARCHAR(50),
+    shipping_limit_date DATETIME,
+    price FLOAT,
+    freight_value FLOAT
+);
+GO
+BULK INSERT olist_order_items_dataset
+FROM 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\olist_order_items_dataset.csv'
+WITH (
+    FORMAT = 'CSV',
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '0x0a',
+    TABLOCK
 );
 GO
 
--- ---------------------------
--- Tabela: olist_products_dataset
--- Detalhes dos produtos
--- ---------------------------
-IF OBJECT_ID('olist_products_dataset', 'U') IS NOT NULL DROP TABLE olist_products_dataset;
-GO
+-- olist_products_dataset
 CREATE TABLE olist_products_dataset (
-    product_id VARCHAR(50) NOT NULL PRIMARY KEY,
-    product_category_name VARCHAR(100) NULL,
-    product_name_lenght INT NULL,
-    product_description_lenght INT NULL,
-    product_photos_qty INT NULL,
-    product_weight_g INT NULL,
-    product_length_cm INT NULL,
-    product_height_cm INT NULL,
-    product_width_cm INT NULL
+    product_id VARCHAR(50),
+    product_category_name VARCHAR(100),
+    product_name_lenght INT,
+    product_description_lenght INT,
+    product_photos_qty INT,
+    product_weight_g INT,
+    product_length_cm INT,
+    product_height_cm INT,
+    product_width_cm INT
+);
+GO
+BULK INSERT olist_products_dataset
+FROM 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\olist_products_dataset.csv'
+WITH (
+    FORMAT = 'CSV',
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '0x0a',
+    TABLOCK
 );
 GO
 
--- ---------------------------
--- Tabela: olist_sellers_dataset
--- Vendedores
--- ---------------------------
-IF OBJECT_ID('olist_sellers_dataset', 'U') IS NOT NULL DROP TABLE olist_sellers_dataset;
-GO
+-- olist_sellers_dataset
 CREATE TABLE olist_sellers_dataset (
-    seller_id VARCHAR(50) NOT NULL PRIMARY KEY,
-    seller_zip_code_prefix VARCHAR(10) NULL,
-    seller_city VARCHAR(100) NULL,
-    seller_state VARCHAR(10) NULL
+    seller_id VARCHAR(50),
+    seller_zip_code_prefix VARCHAR(10),
+    seller_city VARCHAR(100),
+    seller_state VARCHAR(10)
+);
+GO
+BULK INSERT olist_sellers_dataset
+FROM 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\olist_sellers_dataset.csv'
+WITH (
+    FORMAT = 'CSV',
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '0x0a',
+    TABLOCK
 );
 GO
 
--- ---------------------------
--- Tabela: olist_order_payments_dataset
--- Pagamentos dos pedidos
--- ---------------------------
-IF OBJECT_ID('olist_order_payments_dataset', 'U') IS NOT NULL DROP TABLE olist_order_payments_dataset;
-GO
+-- olist_order_payments_dataset
 CREATE TABLE olist_order_payments_dataset (
-    order_id VARCHAR(50) NOT NULL,
-    payment_sequential INT NOT NULL,
-    payment_type VARCHAR(50) NULL,
-    payment_installments INT NULL,
-    payment_value FLOAT NULL,
-    CONSTRAINT PK_olist_order_payments PRIMARY KEY (order_id, payment_sequential)
+    order_id VARCHAR(50),
+    payment_sequential INT,
+    payment_type VARCHAR(50),
+    payment_installments INT,
+    payment_value FLOAT
+);
+GO
+BULK INSERT olist_order_payments_dataset
+FROM 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\olist_order_payments_dataset.csv'
+WITH (
+    FORMAT = 'CSV',
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '0x0a',
+    TABLOCK
 );
 GO
 
--- ---------------------------
--- Tabela: olist_order_reviews_dataset
--- Avaliações dos pedidos
--- ---------------------------
-IF OBJECT_ID('olist_order_reviews_dataset', 'U') IS NOT NULL DROP TABLE olist_order_reviews_dataset;
-GO
+-- olist_order_reviews_dataset
 CREATE TABLE olist_order_reviews_dataset (
-    review_id VARCHAR(50) NOT NULL PRIMARY KEY,
-    order_id VARCHAR(50) NOT NULL,
-    review_score INT NULL,
-    review_comment_title VARCHAR(200) NULL,
-    review_comment_message VARCHAR(MAX) NULL,
-    review_creation_date DATETIME NULL,
-    review_answer_timestamp DATETIME NULL
+    review_id VARCHAR(50),
+    order_id VARCHAR(50),
+    review_score INT,
+    review_comment_title VARCHAR(200),
+    review_comment_message VARCHAR(MAX),
+    review_creation_date DATETIME,
+    review_answer_timestamp DATETIME
+);
+GO
+BULK INSERT olist_order_reviews_dataset
+FROM 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\olist_order_reviews_dataset.csv'
+WITH (
+    FORMAT = 'CSV',
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '0x0a',
+    TABLOCK
 );
 GO
 
--- ---------------------------
--- Tabela: product_category_name_translation
--- Tradução das categorias dos produtos
--- ---------------------------
-IF OBJECT_ID('product_category_name_translation', 'U') IS NOT NULL DROP TABLE product_category_name_translation;
-GO
+-- product_category_name_translation
 CREATE TABLE product_category_name_translation (
-    product_category_name VARCHAR(100) NOT NULL PRIMARY KEY,
-    product_category_name_english VARCHAR(100) NULL
+    product_category_name VARCHAR(100),
+    product_category_name_english VARCHAR(100)
 );
 GO
+BULK INSERT product_category_name_translation
+FROM 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\product_category_name_translation.csv'
+WITH (
+    FORMAT = 'CSV',
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '0x0a',
+    TABLOCK
+);
+GO
+
+-- ==================== VIEWS COM TRATAMENTO DE NULL ====================
+
+-- vw_olist_orders
+CREATE VIEW vw_olist_orders AS
+SELECT
+    order_id,
+    customer_id,
+    ISNULL(order_status, 'desconhecido') AS order_status,
+    ISNULL(order_purchase_timestamp, '1900-01-01') AS order_purchase_timestamp,
+    ISNULL(order_approved_at, '1900-01-01') AS order_approved_at,
+    ISNULL(order_delivered_carrier_date, '1900-01-01') AS order_delivered_carrier_date,
+    ISNULL(order_delivered_customer_date, '1900-01-01') AS order_delivered_customer_date,
+    ISNULL(order_estimated_delivery_date, '1900-01-01') AS order_estimated_delivery_date
+FROM olist_orders_dataset;
+GO
+
+-- vw_olist_order_items
+CREATE VIEW vw_olist_order_items AS
+SELECT
+    order_id,
+    order_item_id,
+    product_id,
+    seller_id,
+    ISNULL(shipping_limit_date, '1900-01-01') AS shipping_limit_date,
+    ISNULL(price, 0) AS price,
+    ISNULL(freight_value, 0) AS freight_value
+FROM olist_order_items_dataset;
+GO
+
+-- vw_olist_reviews
+CREATE VIEW vw_olist_reviews AS
+SELECT
+    order_id,
+    ISNULL(review_score, 0) AS review_score,
+    ISNULL(review_comment_title, 'sem título') AS review_comment_title,
+    ISNULL(review_comment_message, 'sem comentário') AS review_comment_message,
+    ISNULL(review_creation_date, '1900-01-01') AS review_creation_date,
+    ISNULL(review_answer_timestamp, '1900-01-01') AS review_answer_timestamp
+FROM olist_order_reviews_dataset;
+GO
+
+-- vw_olist_payments
+CREATE VIEW vw_olist_payments AS
+SELECT
+    order_id,
+    ISNULL(payment_sequential, 0) AS payment_sequential,
+    ISNULL(payment_type, 'desconhecido') AS payment_type,
+    ISNULL(payment_installments, 0) AS payment_installments,
+    ISNULL(payment_value, 0) AS payment_value
+FROM olist_order_payments_dataset;
+GO
+
+-- vw_olist_products
+CREATE VIEW vw_olist_products AS
+SELECT
+    product_id,
+    ISNULL(product_category_name, 'nao_informado') AS product_category_name,
+    ISNULL(product_name_lenght, 0) AS product_name_length,
+    ISNULL(product_description_lenght, 0) AS product_description_length,
+    ISNULL(product_photos_qty, 0) AS product_photos_qty,
+    ISNULL(product_weight_g, 0) AS product_weight_g,
+    ISNULL(product_length_cm, 0) AS product_length_cm,
+    ISNULL(product_height_cm, 0) AS product_height_cm,
+    ISNULL(product_width_cm, 0) AS product_width_cm
+FROM olist_products_dataset;
+GO
+
+-- vw_olist_customers
+CREATE VIEW vw_olist_customers AS
+SELECT
+    customer_id,
+    customer_unique_id,
+    ISNULL(customer_zip_code_prefix, '00000') AS customer_zip_code_prefix,
+    ISNULL(customer_city, 'desconhecida') AS customer_city,
+    ISNULL(customer_state, 'XX') AS customer_state
+FROM olist_customers_dataset;
+GO
+
+-- vw_olist_sellers
+CREATE VIEW vw_olist_sellers AS
+SELECT
+    seller_id,
+    ISNULL(seller_zip_code_prefix, '00000') AS seller_zip_code_prefix,
+    ISNULL(seller_city, 'desconhecida') AS seller_city,
+    ISNULL(seller_state, 'XX') AS seller_state
+FROM olist_sellers_dataset;
+GO
+
+-- vw_product_category_translation
+CREATE VIEW vw_product_category_translation AS
+SELECT
+    ISNULL(product_category_name, 'nao_informado') AS product_category_name,
+    ISNULL(product_category_name_english, 'not_provided') AS product_category_name_english
+FROM product_category_name_translation;
+GO
+
