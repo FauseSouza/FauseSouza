@@ -1,0 +1,144 @@
+-- =========================================
+-- Script de criação das tabelas Olist no SQL Server
+-- Autor: Fause Souza
+-- Data: 2025-05-23
+-- =========================================
+
+-- Criar banco de dados se não existir
+IF DB_ID('olist_db') IS NULL
+BEGIN
+    CREATE DATABASE olist_db;
+END;
+GO
+
+USE olist_db;
+GO
+
+-- ---------------------------
+-- Tabela: olist_customers_dataset
+-- Dados dos clientes
+-- ---------------------------
+IF OBJECT_ID('olist_customers_dataset', 'U') IS NOT NULL DROP TABLE olist_customers_dataset;
+GO
+CREATE TABLE olist_customers_dataset (
+    customer_id VARCHAR(50) NOT NULL PRIMARY KEY,
+    customer_unique_id VARCHAR(50) NOT NULL,
+    customer_zip_code_prefix VARCHAR(10) NULL,
+    customer_city VARCHAR(100) NULL,
+    customer_state VARCHAR(10) NULL
+);
+GO
+
+-- ---------------------------
+-- Tabela: olist_orders_dataset
+-- Dados dos pedidos
+-- ---------------------------
+IF OBJECT_ID('olist_orders_dataset', 'U') IS NOT NULL DROP TABLE olist_orders_dataset;
+GO
+CREATE TABLE olist_orders_dataset (
+    order_id VARCHAR(50) NOT NULL PRIMARY KEY,
+    customer_id VARCHAR(50) NOT NULL,
+    order_status VARCHAR(20) NOT NULL,
+    order_purchase_timestamp DATETIME NULL,
+    order_approved_at DATETIME NULL,
+    order_delivered_carrier_date DATETIME NULL,
+    order_delivered_customer_date DATETIME NULL,
+    order_estimated_delivery_date DATETIME NULL
+);
+GO
+
+-- ---------------------------
+-- Tabela: olist_order_items_dataset
+-- Itens de cada pedido
+-- ---------------------------
+IF OBJECT_ID('olist_order_items_dataset', 'U') IS NOT NULL DROP TABLE olist_order_items_dataset;
+GO
+CREATE TABLE olist_order_items_dataset (
+    order_id VARCHAR(50) NOT NULL,
+    order_item_id INT NOT NULL,
+    product_id VARCHAR(50) NOT NULL,
+    seller_id VARCHAR(50) NOT NULL,
+    shipping_limit_date DATETIME NULL,
+    price FLOAT NULL,
+    freight_value FLOAT NULL,
+    CONSTRAINT PK_olist_order_items PRIMARY KEY (order_id, order_item_id)
+);
+GO
+
+-- ---------------------------
+-- Tabela: olist_products_dataset
+-- Detalhes dos produtos
+-- ---------------------------
+IF OBJECT_ID('olist_products_dataset', 'U') IS NOT NULL DROP TABLE olist_products_dataset;
+GO
+CREATE TABLE olist_products_dataset (
+    product_id VARCHAR(50) NOT NULL PRIMARY KEY,
+    product_category_name VARCHAR(100) NULL,
+    product_name_lenght INT NULL,
+    product_description_lenght INT NULL,
+    product_photos_qty INT NULL,
+    product_weight_g INT NULL,
+    product_length_cm INT NULL,
+    product_height_cm INT NULL,
+    product_width_cm INT NULL
+);
+GO
+
+-- ---------------------------
+-- Tabela: olist_sellers_dataset
+-- Vendedores
+-- ---------------------------
+IF OBJECT_ID('olist_sellers_dataset', 'U') IS NOT NULL DROP TABLE olist_sellers_dataset;
+GO
+CREATE TABLE olist_sellers_dataset (
+    seller_id VARCHAR(50) NOT NULL PRIMARY KEY,
+    seller_zip_code_prefix VARCHAR(10) NULL,
+    seller_city VARCHAR(100) NULL,
+    seller_state VARCHAR(10) NULL
+);
+GO
+
+-- ---------------------------
+-- Tabela: olist_order_payments_dataset
+-- Pagamentos dos pedidos
+-- ---------------------------
+IF OBJECT_ID('olist_order_payments_dataset', 'U') IS NOT NULL DROP TABLE olist_order_payments_dataset;
+GO
+CREATE TABLE olist_order_payments_dataset (
+    order_id VARCHAR(50) NOT NULL,
+    payment_sequential INT NOT NULL,
+    payment_type VARCHAR(50) NULL,
+    payment_installments INT NULL,
+    payment_value FLOAT NULL,
+    CONSTRAINT PK_olist_order_payments PRIMARY KEY (order_id, payment_sequential)
+);
+GO
+
+-- ---------------------------
+-- Tabela: olist_order_reviews_dataset
+-- Avaliações dos pedidos
+-- ---------------------------
+IF OBJECT_ID('olist_order_reviews_dataset', 'U') IS NOT NULL DROP TABLE olist_order_reviews_dataset;
+GO
+CREATE TABLE olist_order_reviews_dataset (
+    review_id VARCHAR(50) NOT NULL PRIMARY KEY,
+    order_id VARCHAR(50) NOT NULL,
+    review_score INT NULL,
+    review_comment_title VARCHAR(200) NULL,
+    review_comment_message VARCHAR(MAX) NULL,
+    review_creation_date DATETIME NULL,
+    review_answer_timestamp DATETIME NULL
+);
+GO
+
+-- ---------------------------
+-- Tabela: product_category_name_translation
+-- Tradução das categorias dos produtos
+-- ---------------------------
+IF OBJECT_ID('product_category_name_translation', 'U') IS NOT NULL DROP TABLE product_category_name_translation;
+GO
+CREATE TABLE product_category_name_translation (
+    product_category_name VARCHAR(100) NOT NULL PRIMARY KEY,
+    product_category_name_english VARCHAR(100) NULL
+);
+GO
