@@ -1,0 +1,44 @@
+import os
+import sqlite3
+import pandas as pd
+from kaggle.api.kaggle_api_extended import KaggleApi
+
+# Caminhos
+DATASET_DIR = './datasets/olist'
+DB_PATH = './olist_ecommerce.db'
+
+
+# Baixar o dataset do Kaggle
+def baixar_dataset():
+    os.makedirs(DATASET_DIR, exist_ok=True)
+    api = KaggleApi()
+    api.authenticate()
+    print("🔽 Baixando dataset do Kaggle...")
+    api.dataset_download_files('olistbr/brazilian-ecommerce', path=DATASET_DIR, unzip=True)
+    print("✅ Download concluído e arquivos extraídos.")
+
+
+# Carregar CSVs e salvar no banco SQLite
+def carregar_banco():
+    print("📁 Conectando ao banco SQLite...")
+    conn = sqlite3.connect(DB_PATH)
+
+    arquivos_csv = [f for f in os.listdir(DATASET_DIR) if f.endswith('.csv')]
+
+    for arquivo in arquivos_csv:
+        nome_tabela = arquivo.replace('.csv', '')
+        caminho_arquivo = os.path.join(DATASET_DIR, arquivo)
+
+        print(f"📄 Carregando {arquivo} para a tabela {nome_tabela}...")
+        df = pd.read_csv(caminho_arquivo)
+        df.to_sql(nome_tabela, conn, if_exists='replace', index=False)
+
+    conn.close()
+    print("✅ Banco de dados criado com sucesso.")
+
+
+# Execução principal
+if __name__ == '__main__':
+    baixar_dataset()
+    carregar_banco()
+    print(f"🚀 Finalizado! Banco salvo em: {DB_PATH}")
